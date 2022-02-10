@@ -1,8 +1,6 @@
 import numpy as np
 import random
 
-
-
 kardano = np.zeros((8,8))
 a = [0, 0, 0, 0, 0, 0, 0, 0]
 print("Нажмите на ENTER, чтобы продолжить")
@@ -28,11 +26,19 @@ print("Введите сообщение для шифрования(до 64 с�
 message = input()
 message_x = ''
 z = len(message)
+ind = 0
+r = 0
 for i in range(0, 64):
     if i < len(message):
         message_x += message[i]
+        ind += 1
+    elif r == 0:
+        message_x += '\n'
+        r = 1
+        #ind += 1
     else:
         message_x += ' '
+
 print(message_x)
 
 kardano1 = np.zeros((8, 8))
@@ -44,33 +50,37 @@ for i in range(0, 8):
         kardano1[i, j] = kardano[7 - j, i]
         kardano2[i, j] = kardano[7 - i, 7 - j]
         kardano3[i, j] = kardano[j, 7 - i]
-for i in range(0, 8):
-    for j in range(0, 8):
-        kardano4[i, j] = kardano[i, j] + kardano1[i, j] + kardano2[i, j] + kardano3[i, j]
-print(kardano4)
+
 
 encrypted = np.array([['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '']])
-ind = 0
 for i in range(0, 8):
     for j in range(0, 8):
-        if kardano[i, j] == 1:
-            encrypted[i, j] = message_x[ind]
-            ind +=1
+        encrypted[i, j] = chr(random.randint(40, 90))
+index = 0
 for i in range(0, 8):
     for j in range(0, 8):
-        if kardano1[i, j] == 1:
-            encrypted[i, j] = message_x[ind]
-            ind +=1
+        if kardano[i, j] == 1 and ind >= 0:
+            encrypted[i, j] = message_x[index]
+            ind -=1
+            index += 1
 for i in range(0, 8):
     for j in range(0, 8):
-        if kardano2[i, j] == 1:
-            encrypted[i, j] = message_x[ind]
-            ind +=1
+        if kardano1[i, j] == 1 and ind >= 0:
+            encrypted[i, j] = message_x[index]
+            ind -=1
+            index += 1
 for i in range(0, 8):
     for j in range(0, 8):
-        if kardano3[i, j] == 1:
-            encrypted[i, j] = message_x[ind]
-            ind +=1
+        if kardano2[i, j] == 1 and ind >= 0:
+            encrypted[i, j] = message_x[index]
+            ind -=1
+            index += 1
+for i in range(0, 8):
+    for j in range(0, 8):
+        if kardano3[i, j] == 1 and ind >= 0:
+            encrypted[i, j] = message_x[index]
+            ind -=1
+            index += 1
 print(encrypted)
 
 
@@ -91,5 +101,5 @@ for i in range(0, 8):
     for j in range(0, 8):
         if kardano3[i, j] == 1:
             decrypted += encrypted[i, j]
-print(message_x)
-print(decrypted)
+print("Изначальное сообщение:\t" + message_x.partition('\n')[0])
+print("Полученное сообщение:\t" + decrypted.partition('\n')[0])
